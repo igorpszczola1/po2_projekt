@@ -1,13 +1,9 @@
-/* =================================================================== */
-/* 1. Globalne ustawienia fontu (bez tła, bo tło dajemy w #rootPane)   */
-/* =================================================================== */
+
 .root {
     -fx-font-family: "Comic Sans MS";
 }
 
-/* =================================================================== */
-/* 2. Tło dla AnchorPane o CSS‐owym id „rootPane”                       */
-/* =================================================================== */
+
 #rootPane {
     -fx-background-image: url("/tlo.png");
     -fx-background-size: cover;
@@ -15,17 +11,10 @@
     -fx-background-repeat: no-repeat;
 }
 
-/* =================================================================== */
-/* 3. Półprzezroczyste białe tło dla ListView, by było widać tło       */
-/* =================================================================== */
 .list-view {
     -fx-background-color: rgba(255, 255, 255, 0.8);
     -fx-control-inner-background: rgba(255, 255, 255, 0.8);
 }
-
-/* =================================================================== */
-/* 4. Pozostałe style (ListCell, przyciski itp.; wklej swoją resztę)   */
-/* =================================================================== */
 
 .list-cell {
     -fx-padding: 8 10 8 10;
@@ -112,8 +101,8 @@
 }
 
 .combo-box-popup .list-view {
-    -fx-background-color: #FFFFFF;           /* czyste, nieprzezroczyste białe tło */
-    -fx-control-inner-background: #FFFFFF;   /* to samo dla wnętrza */
+    -fx-background-color: #FFFFFF;
+    -fx-control-inner-background: #FFFFFF;
 }
 
 .table-view {
@@ -122,7 +111,6 @@
     -fx-background-color: rgba(255,255,255,0.9);
 }
 
-/* nagłówki kolumn */
 .table-column-header {
     -fx-background-color: #F5F5F5;
     -fx-border-color: #DDDDDD;
@@ -131,7 +119,6 @@
     -fx-font-weight: bold;
 }
 
-/* naprzemienne kolory wierszy */
 .table-row-cell:odd {
     -fx-background-color: #FAFAFA;
 }
@@ -139,7 +126,6 @@
     -fx-background-color: #FFFFFF;
 }
 
-/* zaznaczony wiersz */
 .table-row-cell:filled:selected,
 .table-row-cell:filled:selected:focused {
     -fx-background-color: #E3F2FD;

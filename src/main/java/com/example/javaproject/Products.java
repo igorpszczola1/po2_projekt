@@ -2,16 +2,14 @@ package com.example.javaproject;
 
 public class Products {
 
-    private String category;         // nazwa kategorii (np. "Dairy")
-    private String name;             // nazwa produktu (np. "Milk")
-    private double quantity;         // bieżąca ilość
-    private double initialQuantity;  // początkowa ilość (do progów 50%)
-    private String unit;             // jednostka (np. "L", "pcs", "kg")
+    private String category;
+    private String name;
+    private double quantity;
+    private double initialQuantity;
+    private String unit;
 
-    // Konstruktor bezargumentowy potrzebny GSON-owi
     public Products() { }
 
-    // (Opcjonalnie) Wygodny konstruktor do ręcznego tworzenia
     public Products(String category, String name, double quantity, String unit) {
         this.category = category;
         this.name = name;
@@ -20,7 +18,6 @@ public class Products {
         this.unit = unit;
     }
 
-    // Gettery / settery
 
     public String getCategory() {
         return category;

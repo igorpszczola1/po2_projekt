@@ -32,7 +32,6 @@ public class ManageProductsController {
         categoryCol.setOnEditCommit(e -> {
             Products p = e.getRowValue();
             p.setCategory(e.getNewValue());
-            // aktualizuj cache
             syncToCache();
         });
 
@@ -46,11 +45,11 @@ public class ManageProductsController {
 
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         qtyCol.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        qtyCol.setOnEditCommit(e -> { // kiedy uzytkownik skonczy edycje, wykonaj ta logike
+        qtyCol.setOnEditCommit(e -> {
             Products p = e.getRowValue();
             p.setQuantity(e.getNewValue());
             p.setInitialQuantity(e.getNewValue());
-            syncToCache(); // bierze cala zawartosc tabelData i nadpisuje cache w servicie
+            syncToCache();
         });
 
         unitCol.setCellValueFactory(new PropertyValueFactory<>("unit"));
@@ -89,9 +88,7 @@ public class ManageProductsController {
         np.setInitialQuantity(1.0);
         np.setUnit("pcs");
 
-        // 1) dodaj do tabeli
         tableData.add(np);
-        // 2) dodaj do cache serwisu
         List<Categories> cats = JsonProductService.getAllCategories();
         Categories cat = cats.stream()
                 .filter(c -> c.getCategory().equals(np.getCategory()))
@@ -111,7 +108,6 @@ public class ManageProductsController {
         Products sel = productsTable.getSelectionModel().getSelectedItem();
         if (sel != null) {
             tableData.remove(sel);
-            // usuń też z cache
             JsonProductService.getAllCategories().forEach(cat ->
                     cat.getProducts().removeIf(p -> p.getName().equals(sel.getName()))
             );
@@ -146,12 +142,10 @@ public class ManageProductsController {
         }
     }
 
-    /** synchronizuje pełną tabelę z cache serwisu (dla edycji inline) */
     private void syncToCache() {
         List<Categories> cats = JsonProductService.getAllCategories();
         // wyczyść wszystkie
         cats.forEach(cat -> cat.getProducts().clear());
-        // ponownie wypelnij zgodnie z tableData
         for (Products p : tableData) {
             Categories cat = cats.stream()
                     .filter(c -> c.getCategory().equals(p.getCategory()))

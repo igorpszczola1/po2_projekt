@@ -22,7 +22,6 @@ public class ProductsController {
     @FXML private ComboBox<String> categoryFilterBox;
     @FXML private ListView<ProductRow> productsListView;
 
-    // Domyślne kroki dla znanych produktów:
     private final Map<String, Double> defaultDeltas = Map.of(
             "Milk", 1.0,
             "Yogurt", 1.0,
@@ -45,7 +44,6 @@ public class ProductsController {
     public void initialize() {
         buildAllProductRows();
 
-        // Kategorie w ComboBoxie
         var cats = JsonProductService.getAllCategories().stream()
                 .map(Categories::getCategory)
                 .collect(Collectors.toCollection(TreeSet::new));
@@ -55,7 +53,6 @@ public class ProductsController {
         categoryFilterBox.setItems(FXCollections.observableArrayList(combo));
         categoryFilterBox.getSelectionModel().selectFirst();
 
-        // Lista i cell factory
         filteredRows.setAll(allProductRows);
         productsListView.setItems(filteredRows);
         setupCellFactory();
@@ -75,8 +72,7 @@ public class ProductsController {
             });
         });
     }
-    // praktyczniejsze ustawienie kazdej komorki
-    // mozna obsluzyc wydarzenia w obrebie pojedynczego wiersza
+
     private void setupCellFactory() {
         productsListView.setCellFactory(lv -> new ListCell<>() {
             HBox hbox = new HBox(10);
@@ -108,7 +104,6 @@ public class ProductsController {
                     quantityText.setText(String.format("%.2f %s",
                             item.getCurrentQuantity(), item.getUnit()));
 
-                    // kolor kropek wg progu 50% i 0%
                     double cur = item.getCurrentQuantity();
                     double init = item.getInitialQuantity();
                     if (cur<=0)
@@ -154,7 +149,6 @@ public class ProductsController {
         updateAllProductRows(item.getName(), p.getQuantity());
     }
 
-    /** Zwraca krok odejmowania: z mapy albo domyślnie 1 lub 1.0 wg jednostki */
     private double getDelta(ProductRow item) {
         return defaultDeltas.getOrDefault(
                 item.getName(),
@@ -175,7 +169,6 @@ public class ProductsController {
     }
 
 
-    //pomoc dla dynamicznego usuwania produktu
     private void updateAllProductRows(String name, double newQty) {
         for (int i=0;i<allProductRows.size();i++) {
             var row = allProductRows.get(i);

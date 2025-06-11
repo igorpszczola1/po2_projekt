@@ -18,9 +18,7 @@ public class CartService {
         return instance;
     }
 
-    /**
-     * Dodaje do koszyka podaną ilość produktu.
-     */
+
     public synchronized void addToCart(String productName, double amount) {
         if (productName == null || amount <= 0) return;
         cartQuantities.put(
@@ -29,10 +27,7 @@ public class CartService {
         );
     }
 
-    /**
-     * Usuwa z koszyka podaną ilość produktu.
-     * Jeśli po odjęciu zostanie <= 0, w ogóle usuwa wpis z mapy.
-     */
+
     public synchronized void removeFromCart(String productName, double amount) {
         if (productName == null || amount <= 0) return;
         double current = cartQuantities.getOrDefault(productName, 0.0);
@@ -44,16 +39,12 @@ public class CartService {
         }
     }
 
-    /**
-     * Zwraca niemodyfikowalną mapę z zawartością koszyka.
-     */
+
     public synchronized Map<String, Double> getCartContents() {
         return Collections.unmodifiableMap(cartQuantities);
     }
 
-    /**
-     * Czyści cały koszyk (usuwa wszystkie wpisy).
-     */
+
     public synchronized void clearCart() {
         cartQuantities.clear();
     }

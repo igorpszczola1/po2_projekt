@@ -1,9 +1,6 @@
 package com.example.javaproject;
 
-/**
- * Model wiersza w ListView produktów.
- * Zawiera kategorię, nazwę, stan bieżący, jednostkę i pulę wyjściową (initial).
- */
+
 public class ProductRow {
     private final String category;
     private final String name;

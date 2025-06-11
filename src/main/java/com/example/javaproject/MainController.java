@@ -14,25 +14,22 @@ public class MainController {
 
     private AnchorPane productsView;
     private AnchorPane cartView;
-    private AnchorPane manageView;               // ← nowy widok
+    private AnchorPane manageView;
     private ProductsController productsController;
     private CartController cartController;
-    private ManageProductsController manageController;  // ← kontroler do zarządzania
+    private ManageProductsController manageController;
 
     @FXML
     public void initialize() {
         try {
-            // 1) Załaduj ProductsView
             FXMLLoader productsLoader = new FXMLLoader(getClass().getResource("ProductsView.fxml"));
             productsView = productsLoader.load();
             productsController = productsLoader.getController();
 
-            // 2) Załaduj CartView
             FXMLLoader cartLoader = new FXMLLoader(getClass().getResource("CartView.fxml"));
             cartView = cartLoader.load();
             cartController = cartLoader.getController();
 
-            // ===== 3) Załaduj ManageProductsView =====
             FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("ManageProductView.fxml"));
             manageView = manageLoader.load();
             manageController = manageLoader.getController();
@@ -41,7 +38,6 @@ public class MainController {
             e.printStackTrace();
         }
 
-        // Na start pokazujemy zakładkę Products
         if (productsView != null) {
             contentPane.getChildren().setAll(productsView);
         }

@@ -1,11 +1,5 @@
 package com.example.javaproject;
 
-/**
- * Klasa pomocnicza do wyświetlania pozycji w koszyku:
- * • name – nazwa produktu,
- * • quantity – ilość (double) w koszyku,
- * • unit – jednostka (String), żeby np. wyświetlać "L", "kg", "pcs".
- */
 public class CartRow {
 
     private final String name;

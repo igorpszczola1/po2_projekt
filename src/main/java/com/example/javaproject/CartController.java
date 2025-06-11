@@ -19,7 +19,6 @@ public class CartController {
     @FXML
     private ListView<CartRow> cartListView;
 
-    // Domyślne ilości „kroków” usuwania, analogicznie jak w ProductsController
     private final Map<String, Double> defaultDeltas = new HashMap<>() {{
         put("Milk", 1.0);
         put("Yogurt", 1.0);
@@ -34,7 +33,6 @@ public class CartController {
 
     @FXML
     public void initialize() {
-        // Na starcie ustawiamy pusty ObservableList i konfigurujemy cell factory
         cartListView.setItems(FXCollections.observableArrayList());
         setupCellFactory();
     }
@@ -45,19 +43,16 @@ public class CartController {
             private final Text nameText = new Text();
             private final Text qtyText = new Text();
             private final Button removeButton = new Button("–");
-            private final Region spacer = new Region(); // niewidoczny spacer
+            private final Region spacer = new Region();
 
             {
-                // Nadajemy styl tekstom i przyciskowi:
                 nameText.getStyleClass().add("product-name");
                 qtyText.getStyleClass().add("product-quantity");
                 removeButton.getStyleClass().add("remove-row-button");
                 removeButton.setFocusTraversable(false);
 
-                // Ustawiamy, aby spacer rozpychał się na max szerokość:
                 HBox.setHgrow(spacer, Priority.ALWAYS);
 
-                // Kolejność: [ nameText ] [ spacer (Priority.ALWAYS) ] [ qtyText ] [ removeButton ]
                 hbox.getChildren().addAll(nameText, spacer, qtyText, removeButton);
             }
 
@@ -69,11 +64,9 @@ public class CartController {
                     setGraphic(null);
                     setText(null);
                 } else {
-                    // Ustawiamy tekst nazwy i tekst ilości:
                     nameText.setText(item.getName());
                     qtyText.setText(String.format("%.2f %s", item.getQuantity(), item.getUnit()));
 
-                    // Obsługa kliknięcia przycisku „–”
                     removeButton.setOnAction(evt -> handleRemoveFromCart(item));
 
                     setGraphic(hbox);
@@ -84,10 +77,8 @@ public class CartController {
 
     private void handleRemoveFromCart(CartRow item) {
         String productName = item.getName();
-        // fallback na 1.0 zamiast 0.0
         Double delta = defaultDeltas.getOrDefault(productName, null);
         if (delta == null) {
-            // prosta reguła: 1.0 dla większości jednostek
             String unit = item.getUnit().toLowerCase();
             delta = switch (unit) {
                 case "pcs", "slices" -> 1.0;
@@ -95,7 +86,6 @@ public class CartController {
                 default              -> 1.0;
             };
         }
-        // dalej jak zwykle
         if (delta <= 0.0) return;
 
         CartService.getInstance().removeFromCart(productName, delta);

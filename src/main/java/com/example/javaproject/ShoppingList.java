@@ -22,9 +22,6 @@ public class ShoppingList extends Application {
         stage.setWidth(700);
         stage.setHeight(900);
         stage.setResizable(false);
-        // Jeśli chcesz ikonę:
-        // Image icon = new Image(getClass().getResource("/com/example/javaproject/koszyk.jpg").toExternalForm());
-        // stage.getIcons().add(icon);
     }
 
     public static void main(String[] args) {

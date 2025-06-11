@@ -23,10 +23,8 @@
          AnchorPane.rightAnchor="0"
          AnchorPane.bottomAnchor="0">
 
-      <!-- Nagłówek -->
       <Text text="Shopping list" styleClass="header-text"/>
 
-      <!-- Zakładki i przycisk „Manage” -->
       <HBox alignment="CENTER" spacing="10">
          <Button fx:id="productsBtn" text="Products" onAction="#showProducts" styleClass="tab-button" />
          <Button fx:id="cartBtn" text="Your cart" onAction="#showCart" styleClass="tab-button" />
@@ -35,7 +33,6 @@
 
       <Separator prefHeight="2"/>
 
-      <!-- Tutaj wstawiamy odpowiedni widok -->
       <StackPane fx:id="contentPane" VBox.vgrow="ALWAYS"/>
    </VBox>
 </AnchorPane>
