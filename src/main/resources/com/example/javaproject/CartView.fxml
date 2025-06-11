@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.javaproject.CartController"
+            prefWidth="680" prefHeight="563">
+    <!-- Jeśli chcesz dodać nagłówek wewnątrz koszyka: -->
+    <Text layoutX="10" layoutY="25" text="Your Cart:" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <!-- ListView, w którym będziemy wyświetlać "CartRow" -->
+    <ListView fx:id="cartListView"
+              layoutX="10" layoutY="40"
+              prefWidth="660" prefHeight="513"
+              styleClass="list-view"/>
+</AnchorPane>

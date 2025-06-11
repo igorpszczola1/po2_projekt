@@ -1,0 +1,85 @@
+[
+  {
+    "category": "Produce",
+    "products": [
+      {
+        "category": "Produce",
+        "name": "Apples",
+        "quantity": 0.5,
+        "initialQuantity": 0.5,
+        "unit": "kg"
+      },
+      {
+        "category": "Produce",
+        "name": "Orange",
+        "quantity": 10.0,
+        "initialQuantity": 10.0,
+        "unit": "kg"
+      },
+      {
+        "category": "Produce",
+        "name": "Banana",
+        "quantity": 40.0,
+        "initialQuantity": 40.0,
+        "unit": "kg"
+      },
+      {
+        "category": "Produce",
+        "name": "Pizza",
+        "quantity": 6.0,
+        "initialQuantity": 6.0,
+        "unit": "slices"
+      }
+    ]
+  },
+  {
+    "category": "Dairy",
+    "products": [
+      {
+        "category": "Dairy",
+        "name": "Milk",
+        "quantity": 1.0,
+        "initialQuantity": 1.0,
+        "unit": "L"
+      },
+      {
+        "category": "Dairy",
+        "name": "Yogurt",
+        "quantity": 2.0,
+        "initialQuantity": 2.0,
+        "unit": "pcs"
+      }
+    ]
+  },
+  {
+    "category": "Uncategorized",
+    "products": [
+      {
+        "category": "Uncategorized",
+        "name": "Rice",
+        "quantity": 5.0,
+        "initialQuantity": 5.0,
+        "unit": "kg"
+      },
+      {
+        "category": "Uncategorized",
+        "name": "Panini",
+        "quantity": 1.0,
+        "initialQuantity": 1.0,
+        "unit": "pcs"
+      }
+    ]
+  },
+  {
+    "category": "Sodas",
+    "products": [
+      {
+        "category": "Sodas",
+        "name": "Coca-cola",
+        "quantity": 20.0,
+        "initialQuantity": 20.0,
+        "unit": "can"
+      }
+    ]
+  }
+]

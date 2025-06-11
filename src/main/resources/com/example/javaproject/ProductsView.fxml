@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.javaproject.ProductsController"
+            prefWidth="680" prefHeight="563">
+
+    <!-- ComboBox do wyboru kategorii. layoutY=10, layoutX=10 -->
+    <ComboBox fx:id="categoryFilterBox"
+              layoutX="10" layoutY="10"
+              prefWidth="200"
+              promptText="All Categories"/>
+
+    <!-- ListView przesunięte niżej: layoutY=50 -->
+    <ListView fx:id="productsListView"
+              layoutX="10" layoutY="50"
+              prefWidth="660" prefHeight="503"
+              styleClass="list-view"/>
+</AnchorPane>
