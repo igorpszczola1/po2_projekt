@@ -4,20 +4,15 @@ public class Products {
 
     private String category;
     private String name;
-    private double quantity;
-    private double initialQuantity;
     private String unit;
 
     public Products() { }
 
-    public Products(String category, String name, double quantity, String unit) {
+    public Products(String category, String name, String unit) {
         this.category = category;
         this.name = name;
-        this.quantity = quantity;
-        this.initialQuantity = quantity;
         this.unit = unit;
     }
-
 
     public String getCategory() {
         return category;
@@ -33,20 +28,6 @@ public class Products {
         this.name = name;
     }
 
-    public double getQuantity() {
-        return quantity;
-    }
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
-    }
-
-    public double getInitialQuantity() {
-        return initialQuantity;
-    }
-    public void setInitialQuantity(double initialQuantity) {
-        this.initialQuantity = initialQuantity;
-    }
-
     public String getUnit() {
         return unit;
     }
@@ -56,9 +37,6 @@ public class Products {
 
     @Override
     public String toString() {
-        return String.format(
-                "%s (%s: %.2f %s, init=%.2f)",
-                name, category, quantity, unit, initialQuantity
-        );
+        return String.format("%s (%s, %s)", name, category, unit);
     }
 }

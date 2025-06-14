@@ -29,6 +29,7 @@ public class MainController {
             FXMLLoader cartLoader = new FXMLLoader(getClass().getResource("CartView.fxml"));
             cartView = cartLoader.load();
             cartController = cartLoader.getController();
+            cartController.refreshCart();  // <-- TU DODALIŚMY
 
             FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("ManageProductView.fxml"));
             manageView = manageLoader.load();

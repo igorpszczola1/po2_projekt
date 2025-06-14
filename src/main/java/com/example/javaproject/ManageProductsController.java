@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.converter.DoubleStringConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,6 @@ public class ManageProductsController {
     @FXML private TableView<Products> productsTable;
     @FXML private TableColumn<Products, String> categoryCol;
     @FXML private TableColumn<Products, String> nameCol;
-    @FXML private TableColumn<Products, Double> qtyCol;
     @FXML private TableColumn<Products, String> unitCol;
 
     private final ObservableList<Products> tableData = FXCollections.observableArrayList();
@@ -40,15 +38,6 @@ public class ManageProductsController {
         nameCol.setOnEditCommit(e -> {
             Products p = e.getRowValue();
             p.setName(e.getNewValue());
-            syncToCache();
-        });
-
-        qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        qtyCol.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        qtyCol.setOnEditCommit(e -> {
-            Products p = e.getRowValue();
-            p.setQuantity(e.getNewValue());
-            p.setInitialQuantity(e.getNewValue());
             syncToCache();
         });
 
@@ -84,8 +73,6 @@ public class ManageProductsController {
         Products np = new Products();
         np.setCategory("Uncategorized");
         np.setName("Nowy produkt");
-        np.setQuantity(1.0);
-        np.setInitialQuantity(1.0);
         np.setUnit("pcs");
 
         tableData.add(np);
@@ -144,7 +131,6 @@ public class ManageProductsController {
 
     private void syncToCache() {
         List<Categories> cats = JsonProductService.getAllCategories();
-        // wyczyść wszystkie
         cats.forEach(cat -> cat.getProducts().clear());
         for (Products p : tableData) {
             Categories cat = cats.stream()
