@@ -3,15 +3,11 @@ package com.example.javaproject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import java.util.*;
@@ -20,98 +16,67 @@ import java.util.stream.Collectors;
 public class ProductsController {
 
     @FXML private ComboBox<String> categoryFilterBox;
-    @FXML private ListView<ProductRow> productsListView;
+    @FXML private ListView<Products> productsListView;
 
-    private final Map<String, Double> defaultDeltas = Map.of(
-            "Milk", 1.0,
-            "Yogurt", 1.0,
-            "Cheddar Cheese", 0.25,
-            "Apples", 0.5,
-            "Bananas", 0.5,
-            "Tomatoes", 0.5,
-            "Rice", 1.0,
-            "Olive Oil", 1.0,
-            "Bread", 1.0
-    );
-
-
-    // ObservableList - informuje powiązane widoki np. ListView o kazdej zmianie zawartosci
-    // nie trzeba wywolywac refresh, automatycznie sie odswiezy
-    private final ObservableList<ProductRow> allProductRows = FXCollections.observableArrayList();
-    private final ObservableList<ProductRow> filteredRows = FXCollections.observableArrayList();
+    private final ObservableList<Products> allProducts = FXCollections.observableArrayList();
+    private final ObservableList<Products> filteredProducts = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        buildAllProductRows();
+        loadProducts();
 
-        var cats = JsonProductService.getAllCategories().stream()
+        var categories = JsonProductService.getAllCategories().stream()
                 .map(Categories::getCategory)
                 .collect(Collectors.toCollection(TreeSet::new));
-        var combo = new ArrayList<String>();
-        combo.add("All Categories");
-        combo.addAll(cats);
-        categoryFilterBox.setItems(FXCollections.observableArrayList(combo));
+
+        List<String> comboOptions = new ArrayList<>();
+        comboOptions.add("All Categories");
+        comboOptions.addAll(categories);
+        categoryFilterBox.setItems(FXCollections.observableArrayList(comboOptions));
         categoryFilterBox.getSelectionModel().selectFirst();
 
-        filteredRows.setAll(allProductRows);
-        productsListView.setItems(filteredRows);
+        filteredProducts.setAll(allProducts);
+        productsListView.setItems(filteredProducts);
         setupCellFactory();
 
         categoryFilterBox.getSelectionModel().selectedItemProperty()
-                .addListener((obs, o, n) -> applyFilter(n));
+                .addListener((obs, oldVal, newVal) -> applyFilter(newVal));
     }
 
-    private void buildAllProductRows() {
-        allProductRows.clear();
+    private void loadProducts() {
+        allProducts.clear();
         JsonProductService.getAllCategories().forEach(cat -> {
-            String catName = cat.getCategory();
-            cat.getProducts().forEach(p -> {
-                double cur = p.getQuantity();
-                double init = p.getInitialQuantity();
-                allProductRows.add(new ProductRow(catName, p.getName(), cur, init, p.getUnit()));
-            });
+            cat.getProducts().forEach(allProducts::add);
         });
     }
 
     private void setupCellFactory() {
         productsListView.setCellFactory(lv -> new ListCell<>() {
-            HBox hbox = new HBox(10);
-            Circle dot = new Circle(6);
-            VBox vboxText = new VBox(2);
-            Text nameText = new Text();
-            Text quantityText = new Text();
-            Button addButton = new Button("+");
+            private final HBox hbox = new HBox(10);
+            private final VBox vbox = new VBox(2);
+            private final Text nameText = new Text();
+            private final Text unitText = new Text();
+            private final Button addButton = new Button("+");
 
             {
-                dot.getStyleClass().add("product-dot");
                 nameText.getStyleClass().add("product-name");
-                quantityText.getStyleClass().add("product-quantity");
+                unitText.getStyleClass().add("product-quantity");
                 addButton.getStyleClass().add("add-row-button");
                 addButton.setFocusTraversable(false);
 
-                vboxText.getChildren().add(nameText);
-                HBox.setHgrow(vboxText, Priority.ALWAYS);
-                hbox.getChildren().addAll(dot, vboxText, quantityText, addButton);
+                vbox.getChildren().addAll(nameText, unitText);
+                HBox.setHgrow(vbox, Priority.ALWAYS);
+                hbox.getChildren().addAll(vbox, addButton);
             }
 
             @Override
-            protected void updateItem(ProductRow item, boolean empty) {
+            protected void updateItem(Products item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item==null) {
+                if (empty || item == null) {
                     setGraphic(null);
                 } else {
                     nameText.setText(item.getName());
-                    quantityText.setText(String.format("%.2f %s",
-                            item.getCurrentQuantity(), item.getUnit()));
-
-                    double cur = item.getCurrentQuantity();
-                    double init = item.getInitialQuantity();
-                    if (cur<=0)
-                        dot.setFill(Paint.valueOf("#E53935"));
-                    else if (cur<init/2)
-                        dot.setFill(Paint.valueOf("#FF8F00"));
-                    else
-                        dot.setFill(Paint.valueOf("#00C853"));
+                    unitText.setText("Unit: " + item.getUnit());
 
                     addButton.setOnAction(evt -> handleAddToCart(item));
                     setGraphic(hbox);
@@ -121,73 +86,55 @@ public class ProductsController {
     }
 
     private void applyFilter(String category) {
-        if (category==null || category.equals("All Categories")) {
-            filteredRows.setAll(allProductRows);
+        if (category == null || category.equals("All Categories")) {
+            filteredProducts.setAll(allProducts);
         } else {
-            filteredRows.setAll(
-                    allProductRows.stream()
-                            .filter(r->r.getCategory().equals(category))
+            filteredProducts.setAll(
+                    allProducts.stream()
+                            .filter(p -> p.getCategory().equals(category))
                             .collect(Collectors.toList())
             );
         }
     }
 
-    private void handleAddToCart(ProductRow item) {
-        Products p = findProductInInventory(item.getName());
-        if (p==null)
-            return;
+    private void handleAddToCart(Products product) {
+        TextInputDialog dialog = new TextInputDialog("1");
+        dialog.setTitle("Add to cart");
+        dialog.setHeaderText("Add quantity for " + product.getName());
+        dialog.setContentText("Enter quantity (" + product.getUnit() + "):");
 
-        double cur = p.getQuantity();
-        if (cur<=0)
-            return;
-
-        double delta = getDelta(item);
-        double take  = Math.min(cur, delta);
-        p.setQuantity(cur - take);
-
-        CartService.getInstance().addToCart(item.getName(), take);
-        updateAllProductRows(item.getName(), p.getQuantity());
-    }
-
-    private double getDelta(ProductRow item) {
-        return defaultDeltas.getOrDefault(
-                item.getName(),
-                switch(item.getUnit().toLowerCase()) {
-                    case "pcs" -> 1.0;
-                    case "kg","l" -> 1.0;
-                    default -> 1.0;
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(input -> {
+            try {
+                double quantity = Double.parseDouble(input);
+                if (quantity <= 0) {
+                    showError("Quantity must be greater than zero.");
+                    return;
                 }
-        );
-    }
 
-    private Products findProductInInventory(String name) {
-        return JsonProductService.getAllCategories().stream()
-                .flatMap(c->c.getProducts().stream())
-                .filter(p->p.getName().equals(name))
-                .findFirst()
-                .orElse(null);
-    }
-
-
-    private void updateAllProductRows(String name, double newQty) {
-        for (int i=0;i<allProductRows.size();i++) {
-            var row = allProductRows.get(i);
-            if (row.getName().equals(name)) {
-                allProductRows.set(i, new ProductRow(
-                        row.getCategory(),
-                        row.getName(),
-                        newQty,
-                        row.getInitialQuantity(),
-                        row.getUnit()
-                ));
-                break;
+                CartItem item = new CartItem(product.getName(), quantity, product.getUnit());
+                CartService.getInstance().addToCart(item);
+                showInfo("Added to cart.");
+            } catch (NumberFormatException e) {
+                showError("Invalid number format.");
             }
-        }
-        applyFilter(categoryFilterBox.getSelectionModel().getSelectedItem());
+        });
+    }
+
+    private void showError(String msg) {
+        Alert a = new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK);
+        a.setHeaderText("Error");
+        a.showAndWait();
+    }
+
+    private void showInfo(String msg) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
+        a.setHeaderText("Info");
+        a.showAndWait();
     }
 
     public void refreshProducts() {
-        buildAllProductRows();
+        loadProducts();
         applyFilter(categoryFilterBox.getSelectionModel().getSelectedItem());
     }
 }

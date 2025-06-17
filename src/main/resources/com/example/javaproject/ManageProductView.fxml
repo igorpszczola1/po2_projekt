@@ -9,6 +9,7 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+
 <AnchorPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.javaproject.ManageProductsController"
@@ -20,10 +21,8 @@
                 <Insets top="10" right="20" bottom="10" left="20"/>
             </padding>
 
-
             <children>
                 <Text text="Modify List" styleClass="header-text" />
-
 
                 <TableView fx:id="productsTable"
                            prefHeight="600" prefWidth="650"
@@ -44,11 +43,6 @@
                                 <PropertyValueFactory property="name"/>
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn fx:id="qtyCol" text="Quantity" prefWidth="100">
-                            <cellValueFactory>
-                                <PropertyValueFactory property="quantity"/>
-                            </cellValueFactory>
-                        </TableColumn>
                         <TableColumn fx:id="unitCol" text="Unit" prefWidth="100">
                             <cellValueFactory>
                                 <PropertyValueFactory property="unit"/>
@@ -56,7 +50,6 @@
                         </TableColumn>
                     </columns>
                 </TableView>
-
 
                 <HBox spacing="10" alignment="CENTER">
                     <children>

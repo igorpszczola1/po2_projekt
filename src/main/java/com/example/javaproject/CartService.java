@@ -1,51 +1,91 @@
 package com.example.javaproject;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.*;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CartService {
 
-
-    // singleton: jeden obiekt (static final) - aplikacja operuje na tylko jednej liscie (koszyku)
-
     private static final CartService instance = new CartService();
-    private final Map<String, Double> cartQuantities = new HashMap<>();
+    private static final String CART_FILENAME = "cart.json";
 
-    private CartService() {}
+    private List<CartItem> cartItems;
+
+    private CartService() {
+        loadCartFromFile();
+    }
 
     public static CartService getInstance() {
         return instance;
     }
 
-
-    public synchronized void addToCart(String productName, double amount) {
-        if (productName == null || amount <= 0) return;
-        cartQuantities.put(
-                productName,
-                cartQuantities.getOrDefault(productName, 0.0) + amount
-        );
+    public synchronized List<CartItem> getCartItems() {
+        return new ArrayList<>(cartItems);
     }
 
+    public synchronized void addToCart(CartItem item) {
+        for (CartItem existing : cartItems) {
+            if (existing.getName().equals(item.getName())) {
+                existing.setQuantity(existing.getQuantity() + item.getQuantity());
+                return;
+            }
+        }
+        cartItems.add(item);
+    }
 
-    public synchronized void removeFromCart(String productName, double amount) {
-        if (productName == null || amount <= 0) return;
-        double current = cartQuantities.getOrDefault(productName, 0.0);
-        double newVal = current - amount;
-        if (newVal <= 0) {
-            cartQuantities.remove(productName);
-        } else {
-            cartQuantities.put(productName, newVal);
+    public synchronized void removeFromCart(String productName) {
+        cartItems.removeIf(item -> item.getName().equals(productName));
+    }
+
+    public synchronized void clearCart() {
+        cartItems.clear();
+    }
+
+    public synchronized void saveCartToFile() {
+        try (Writer writer = new FileWriter(CART_FILENAME)) {
+            String json = new GsonBuilder().setPrettyPrinting().create().toJson(cartItems);
+            writer.write(json);
+            writer.flush();
+            System.out.println("Cart saved to: " + new File(CART_FILENAME).getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-
-    public synchronized Map<String, Double> getCartContents() {
-        return Collections.unmodifiableMap(cartQuantities);
-    }
-
-
-    public synchronized void clearCart() {
-        cartQuantities.clear();
+    private void loadCartFromFile() {
+        File file = new File(CART_FILENAME);
+        if (file.exists()) {
+            try (Reader reader = new FileReader(file)) {
+                Type listType = new TypeToken<List<CartItem>>() {}.getType();
+                cartItems = new Gson().fromJson(reader, listType);
+                if (cartItems == null) cartItems = new ArrayList<>();
+                System.out.println("Cart loaded from file.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                cartItems = new ArrayList<>();
+            }
+        } else {
+            try (InputStream is = getClass().getResourceAsStream("/com/example/javaproject/cart.json")) {
+                if (is != null) {
+                    try (Reader reader = new InputStreamReader(is)) {
+                        Type listType = new TypeToken<List<CartItem>>() {}.getType();
+                        cartItems = new Gson().fromJson(reader, listType);
+                        if (cartItems == null) cartItems = new ArrayList<>();
+                        System.out.println("Cart loaded from resource.");
+                    }
+                } else {
+                    cartItems = new ArrayList<>();
+                    System.out.println("Cart resource not found.");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                cartItems = new ArrayList<>();
+            }
+        }
     }
 }

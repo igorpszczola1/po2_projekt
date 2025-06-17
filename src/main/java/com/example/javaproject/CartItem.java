@@ -1,24 +1,17 @@
 package com.example.javaproject;
 
-public class Products {
+public class CartItem {
 
-    private String category;
     private String name;
+    private double quantity;
     private String unit;
 
-    public Products() { }
+    public CartItem() {}
 
-    public Products(String category, String name, String unit) {
-        this.category = category;
+    public CartItem(String name, double quantity, String unit) {
         this.name = name;
+        this.quantity = quantity;
         this.unit = unit;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public String getName() {
@@ -26,6 +19,13 @@ public class Products {
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
     }
 
     public String getUnit() {
@@ -37,6 +37,6 @@ public class Products {
 
     @Override
     public String toString() {
-        return String.format("%s (%s, %s)", name, category, unit);
+        return String.format("%s: %.2f %s", name, quantity, unit);
     }
 }
