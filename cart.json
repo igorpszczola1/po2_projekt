@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Apples",
+    "quantity": 5.0,
+    "unit": "kg"
+  },
+  {
+    "name": "Banana",
+    "quantity": 9.0,
+    "unit": "kg"
+  }
+]

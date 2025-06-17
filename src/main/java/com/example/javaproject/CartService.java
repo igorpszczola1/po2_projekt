@@ -4,11 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +12,7 @@ import java.util.List;
 public class CartService {
 
     private static final CartService instance = new CartService();
-    private static final Path CART_PATH = Paths.get("cart.json");
+    private static final String CART_FILENAME = "cart.json";
 
     private List<CartItem> cartItems;
 
@@ -51,28 +47,45 @@ public class CartService {
     }
 
     public synchronized void saveCartToFile() {
-        try {
+        try (Writer writer = new FileWriter(CART_FILENAME)) {
             String json = new GsonBuilder().setPrettyPrinting().create().toJson(cartItems);
-            Files.writeString(CART_PATH, json);
+            writer.write(json);
+            writer.flush();
+            System.out.println("Cart saved to: " + new File(CART_FILENAME).getAbsolutePath());
         } catch (Exception e) {
-            throw new RuntimeException("Nie udało się zapisać koszyka: " + e.getMessage(), e);
+            e.printStackTrace();
         }
     }
 
     private void loadCartFromFile() {
-        try {
-            var resource = getClass().getResourceAsStream("/com/example/javaproject/cart.json");
-            if (resource != null) {
-                Reader reader = new InputStreamReader(resource);
+        File file = new File(CART_FILENAME);
+        if (file.exists()) {
+            try (Reader reader = new FileReader(file)) {
                 Type listType = new TypeToken<List<CartItem>>() {}.getType();
                 cartItems = new Gson().fromJson(reader, listType);
-            } else {
+                if (cartItems == null) cartItems = new ArrayList<>();
+                System.out.println("Cart loaded from file.");
+            } catch (Exception e) {
+                e.printStackTrace();
                 cartItems = new ArrayList<>();
-                System.out.println("Cart file not found in resources.");
             }
-        } catch (Exception e) {
-            cartItems = new ArrayList<>();
-            e.printStackTrace();
+        } else {
+            try (InputStream is = getClass().getResourceAsStream("/com/example/javaproject/cart.json")) {
+                if (is != null) {
+                    try (Reader reader = new InputStreamReader(is)) {
+                        Type listType = new TypeToken<List<CartItem>>() {}.getType();
+                        cartItems = new Gson().fromJson(reader, listType);
+                        if (cartItems == null) cartItems = new ArrayList<>();
+                        System.out.println("Cart loaded from resource.");
+                    }
+                } else {
+                    cartItems = new ArrayList<>();
+                    System.out.println("Cart resource not found.");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                cartItems = new ArrayList<>();
+            }
         }
     }
 }

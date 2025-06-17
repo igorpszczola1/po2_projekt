@@ -35,6 +35,21 @@
     ]
   },
   {
+    "category": "Sodas",
+    "products": [
+      {
+        "category": "Sodas",
+        "name": "Coca-cola",
+        "unit": "can"
+      },
+      {
+        "category": "Sodas",
+        "name": "Pepsi",
+        "unit": "pcs"
+      }
+    ]
+  },
+  {
     "category": "Other",
     "products": [
       {
@@ -46,16 +61,6 @@
         "category": "Other",
         "name": "Panini",
         "unit": "pcs"
-      }
-    ]
-  },
-  {
-    "category": "Sodas",
-    "products": [
-      {
-        "category": "Sodas",
-        "name": "Coca-cola",
-        "unit": "can"
       }
     ]
   }

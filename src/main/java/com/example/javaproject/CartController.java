@@ -71,7 +71,7 @@ public class CartController {
 
     private void handleRemoveFromCart(CartItem item) {
         CartService.getInstance().removeFromCart(item.getName());
-        CartService.getInstance().saveCartToFile(); // <-- dopisujemy zapisywanie
+        CartService.getInstance().saveCartToFile();
         refreshCart();
     }
 
